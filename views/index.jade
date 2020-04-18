@@ -1,0 +1,72 @@
+extends layout
+
+block content
+
+
+  .intro
+   .title	¡Bienvenido a Quiz!
+   .content
+    |  Responde preguntas, suma puntos y gana!
+
+    //-Nombre del jugador
+    input(placeholder="Tu nombre...", ng-model="player.name").player
+
+    .buttons
+     button.big(ng-click="start()") Comenzar
+     button.big(ng-click="rank()") Puntajes
+     button.big(ng-click="add_question()") Añadir pregunta
+
+  .quiz
+
+   //-Variable donde aparecera la pregunta
+   .content {{question.question}}
+
+   //-Repeticion donde caeran las respuestas
+   .answers(ng-repeat="answer in question.answers", ng-click="check(answer.id)", id="answer{{answer.id}}")
+    {{answer.answer}}
+    .check
+     img(src="/img/yes.png", id="yes{{answer.id}}").yes
+     img(src="/img/no.png", id="no{{answer.id}}").no
+
+  //-Sección donde aparecerá la puntuación final del jugador
+  .finish {{player.name}},
+   .text  ¡ has obtenido 
+    span.puntaje  {{player.points}} 
+    |  puntos!   
+
+  .add
+
+   //-Lugar donde se escribirá la nueva pregunta
+   .add-content
+    textarea(ng-model="question.question", placeholder="Nueva pregunta...").question
+
+   //-Repeticion donde caeran los inputs para cargar las nuevas respuestas
+   .add-answers(ng-repeat="i in [1,2,3,4]")
+    input(ng-model="question.answers[i-1].answer", placeholder="{{i}}° respuesta").answer
+
+   //-Botones para describir cuál de las 4 es la correcta
+   .box.correct Respuesta correcta:
+    .correct-answer(ng-repeat="i in [1, 2, 3, 4]", id="correct{{i}}" ng-click="correct(i)")
+     {{i}}
+
+   //-Botones para agregar la pregunta o cancelarla
+   .buttons
+    button.big(ng-click="add.add()") Agregar pregunta
+    button.big(ng-click="add.cancel()") Cancelar
+
+  .ranking
+
+   .buttons
+    button(ng-click="intro()")  Volver
+   //-Repeticion donde caera el ranking
+   .rank(ng-repeat="rank in ranking | orderBy: '-points'")
+    | {{rank.name}}
+    span.puntaje {{rank.points}}
+    Z
+  //-Sección que avisará cuando la pregunta sea cargada correctamente 
+  .added
+   | Pregunta agregada 
+   img(src="/img/yes.png").icon
+
+  script(src="/js/app.js")
+   
